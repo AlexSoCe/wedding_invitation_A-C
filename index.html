@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Alex & Claries — Boda / Kasal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ivory: #F9F5EE;
+    --cream: #EDE7D8;
+    --gold: #B8943F;
+    --gold-light: #D4AF6A;
+    --gold-pale: #F0E4C4;
+    --text-dark: #2C2416;
+    --text-mid: #6B5B3E;
+    --text-light: #9E8B6F;
+    --blush: #E8D5C4;
+    --sage: #8A9B7A;
+    --white: #FEFCF8;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--ivory);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* LANG TOGGLE */
+  .lang-toggle-wrap {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 100;
+  }
+
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    background: rgba(249,245,238,0.92);
+    border: 1px solid var(--gold-light);
+    border-radius: 30px;
+    padding: 4px;
+    gap: 2px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 16px rgba(184,148,63,0.15);
+  }
+
+  .lang-btn {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 24px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    background: transparent;
+    color: var(--text-light);
+  }
+
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--white);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 80px 32px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(212,175,106,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(232,213,196,0.3) 0%, transparent 60%),
+      var(--ivory);
+    z-index: 0;
+  }
+
+  .floral-top {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    opacity: 0.22;
+    z-index: 0;
+  }
+
+  .floral-bottom {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    width: 280px;
+    opacity: 0.22;
+    z-index: 0;
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.3s forwards;
+  }
+
+  .names {
+    font-size: clamp(52px, 16vw, 72px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.05;
+    color: var(--text-dark);
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.5s forwards;
+  }
+
+  .ampersand {
+    display: block;
+    font-size: clamp(32px, 10vw, 48px);
+    color: var(--gold);
+    line-height: 1.2;
+    font-weight: 300;
+  }
+
+  .divider-gold {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 28px auto;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.7s forwards;
+  }
+
+  .hero-date {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 200;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.9s forwards;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-light);
+    margin-top: 12px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 1.1s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    animation: fadeIn 1s ease 2s forwards;
+    z-index: 1;
+  }
+
+  .scroll-hint span {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out 2s infinite;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 72px 32px;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .section-title {
+    font-size: 34px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.2;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+  }
+
+  .section-body {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--text-mid);
+  }
+
+  /* INVITATION TEXT */
+  .invite-section {
+    background: var(--cream);
+    text-align: center;
+  }
+
+  .invite-section .section-body {
+    font-style: italic;
+    font-size: 19px;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  /* DETAILS */
+  .details-section { background: var(--white); }
+
+  .detail-card {
+    background: var(--ivory);
+    border: 1px solid var(--gold-pale);
+    border-radius: 4px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .detail-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  }
+
+  .detail-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .detail-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .detail-main {
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .detail-sub {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 200;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+  }
+
+  /* TIMELINE */
+  .timeline-section { background: var(--cream); }
+
+  .timeline-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+  }
+
+  .timeline-time {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    min-width: 52px;
+    padding-top: 3px;
+  }
+
+  .timeline-dot-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 6px;
+  }
+
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .timeline-line {
+    width: 1px;
+    flex: 1;
+    min-height: 30px;
+    background: linear-gradient(to bottom, var(--gold-light), transparent);
+    margin-top: 4px;
+  }
+
+  .timeline-text {
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-dark);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .timeline-desc {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+  }
+
+  /* DRESSCODE */
+  .dresscode-section { background: var(--white); text-align: center; }
+
+  .palette-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 28px 0 16px;
+  }
+
+  .swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.8);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.1);
+  }
+
+  .dresscode-note {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+
+  /* RSVP */
+  .rsvp-section {
+    background: var(--text-dark);
+    color: var(--ivory);
+    text-align: center;
+    padding: 72px 32px 80px;
+  }
+
+  .rsvp-section .section-label { color: var(--gold-light); }
+  .rsvp-section .section-title { color: var(--ivory); }
+  .rsvp-section .section-body { color: rgba(249,245,238,0.65); }
+
+  .rsvp-deadline {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--gold-light);
+    margin: 20px 0 32px;
+    text-transform: uppercase;
+  }
+
+  .btn-rsvp {
+    display: inline-block;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    background: var(--gold-light);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .btn-rsvp:hover { background: var(--gold); color: var(--white); }
+
+  /* FOOTER */
+  .footer {
+    background: var(--text-dark);
+    padding: 32px;
+    text-align: center;
+    border-top: 1px solid rgba(184,148,63,0.2);
+  }
+
+  .footer-monogram {
+    font-size: 28px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .footer-date {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(184,148,63,0.5);
+  }
+
+  /* COUNTDOWN */
+  .countdown-section {
+    background: var(--blush);
+    text-align: center;
+    padding: 60px 32px;
+  }
+
+  .countdown-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 28px;
+  }
+
+  .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .countdown-num {
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--text-dark);
+    line-height: 1;
+    min-width: 60px;
+  }
+
+  .countdown-lbl {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+
+  .countdown-sep {
+    font-size: 36px;
+    color: var(--gold-light);
+    line-height: 1.15;
+    align-self: flex-start;
+    padding-top: 4px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* LANG transition */
+  [data-es], [data-ceb] {
+    transition: opacity 0.3s ease;
+  }
+
+  /* DECORATIVE SVG elements */
+  .ornament {
+    display: block;
+    margin: 0 auto 24px;
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE TOGGLE -->
+<div class="lang-toggle-wrap">
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('es')" id="btn-es">ES</button>
+    <button class="lang-btn" onclick="setLang('ceb')" id="btn-ceb">CEB</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Floral SVG top -->
+  <svg class="floral-top" viewBox="0 0 280 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M140 130 Q100 90 60 100 Q80 60 140 50 Q200 60 220 100 Q180 90 140 130Z" stroke="#B8943F" stroke-width="0.8" fill="none"/>
+    <path d="M140 120 Q110 85 70 90 Q90 55 140 45 Q190 55 210 90 Q170 85 140 120Z" stroke="#B8943F" stroke-width="0.5" fill="rgba(184,148,63,0.06)"/>
+    <path d="M80 100 Q60 80 40 90 Q50 65 80 60" stroke="#B8943F" stroke-width="0.6" fill="none"/>
+    <path d="M200 100 Q220 80 240 90 Q230 65 200 60" stroke="#B8943F" stroke-width="0.6" fill="none"/>
+    <circle cx="140" cy="50" r="3" fill="none" stroke="#B8943F" stroke-width="0.8"/>
+    <circle cx="75" cy="60" r="2" fill="none" stroke="#B8943F" stroke-width="0.6"/>
+    <circle cx="205" cy="60" r="2" fill="none" stroke="#B8943F" stroke-width="0.6"/>
+    <path d="M140 50 Q130 30 125 10" stroke="#B8943F" stroke-width="0.5" fill="none"/>
+    <path d="M140 50 Q150 30 155 10" stroke="#B8943F" stroke-width="0.5" fill="none"/>
+    <path d="M125 10 Q120 2 115 0" stroke="#B8943F" stroke-width="0.4" fill="none"/>
+    <path d="M155 10 Q160 2 165 0" stroke="#B8943F" stroke-width="0.4" fill="none"/>
+  </svg>
+
+  <div class="hero-content">
+    <p class="eyebrow" data-es="Los invitan a celebrar" data-ceb="Giimbitahan kamo sa pagsaulog">Los invitan a celebrar</p>
+    <h1 class="names">
+      Alex
+      <span class="ampersand">&amp;</span>
+      Claries
+    </h1>
+    <div class="divider-gold"></div>
+    <p class="hero-date">1 · Noviembre · 2026</p>
+    <p class="hero-sub" data-es="El día más especial de nuestras vidas" data-ceb="Ang labing espesyal nga adlaw sa among kinabuhi">El día más especial de nuestras vidas</p>
+  </div>
+
+  <svg class="floral-bottom" viewBox="0 0 280 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M140 130 Q100 90 60 100 Q80 60 140 50 Q200 60 220 100 Q180 90 140 130Z" stroke="#B8943F" stroke-width="0.8" fill="none"/>
+    <path d="M140 120 Q110 85 70 90 Q90 55 140 45 Q190 55 210 90 Q170 85 140 120Z" stroke="#B8943F" stroke-width="0.5" fill="rgba(184,148,63,0.06)"/>
+    <path d="M80 100 Q60 80 40 90 Q50 65 80 60" stroke="#B8943F" stroke-width="0.6" fill="none"/>
+    <path d="M200 100 Q220 80 240 90 Q230 65 200 60" stroke="#B8943F" stroke-width="0.6" fill="none"/>
+  </svg>
+
+  <div class="scroll-hint">
+    <span data-es="desplazar" data-ceb="i-scroll">desplazar</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- INVITATION -->
+<section class="section invite-section reveal">
+  <span class="section-label" data-es="Con toda la alegría" data-ceb="Sa tibuok kalipay">Con toda la alegría</span>
+
+  <svg class="ornament" width="48" height="24" viewBox="0 0 48 24">
+    <path d="M0 12 Q12 2 24 12 Q36 22 48 12" stroke="#B8943F" stroke-width="0.8" fill="none"/>
+    <path d="M0 12 Q12 22 24 12 Q36 2 48 12" stroke="#B8943F" stroke-width="0.4" fill="none"/>
+    <circle cx="24" cy="12" r="2.5" fill="#B8943F" opacity="0.5"/>
+  </svg>
+
+  <p class="section-body" data-es="Con la bendición de nuestras familias, tenemos el honor de invitarles a compartir el momento en que unimos nuestras vidas en matrimonio." data-ceb="Sa panalangin sa among mga pamilya, may kagalakan naming giimbitahan kamo aron masaksi sa among pagbulag sa kasal.">Con la bendición de nuestras familias, tenemos el honor de invitarles a compartir el momento en que unimos nuestras vidas en matrimonio.</p>
+
+  <div class="divider-gold" style="margin-top: 32px;"></div>
+
+  <p style="font-family:'Josefin Sans',sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-light); margin-top:20px;" data-es="Familias Soto Cepas · Butcon Cuyag" data-ceb="Mga Pamilya Soto Cepas · Butcon Cuyag">Familias Soto Cepas · Butcon Cuyag</p>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="section countdown-section reveal">
+  <span class="section-label" data-es="Cuenta atrás" data-ceb="Countdown">Cuenta atrás</span>
+  <h2 class="section-title" data-es="Faltan..." data-ceb="Nagpabilin pa...">Faltan...</h2>
+  <div class="countdown-grid">
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-days">--</span>
+      <span class="countdown-lbl" data-es="días" data-ceb="mga adlaw">días</span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-hours">--</span>
+      <span class="countdown-lbl" data-es="horas" data-ceb="mga oras">horas</span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-mins">--</span>
+      <span class="countdown-lbl" data-es="minutos" data-ceb="mga minuto">minutos</span>
+    </div>
+  </div>
+</section>
+
+<!-- DETAILS -->
+<section class="section details-section reveal">
+  <span class="section-label" data-es="Información" data-ceb="Impormasyon">Información</span>
+  <h2 class="section-title" data-es="Detalles del día" data-ceb="Mga Detalye sa Adlaw">Detalles del día</h2>
+
+  <div class="detail-card">
+    <span class="detail-icon">⟡</span>
+    <span class="detail-label" data-es="Ceremonia" data-ceb="Seremonya">Ceremonia</span>
+    <p class="detail-main" data-es="Iglesia de Santa María" data-ceb="Simbahan ni Santa María">Iglesia de Santa María</p>
+    <p class="detail-sub">Sábado · 15 Noviembre 2025 · 12:00h</p>
+  </div>
+
+  <div class="detail-card">
+    <span class="detail-icon">◇</span>
+    <span class="detail-label" data-es="Celebración" data-ceb="Selebrasyon">Celebración</span>
+    <p class="detail-main" data-es="Ubay" data-ceb="Ubay">Ubay</p>
+    <p class="detail-sub" data-es="A 5 min de la iglesia · 14:00h" data-ceb="5 minuto gikan sa simbahan · 14:00h">A 5 min de la iglesia · 14:00h</p>
+  </div>
+
+  <div class="detail-card">
+    <span class="detail-icon">◯</span>
+    <span class="detail-label" data-es="Alojamiento" data-ceb="Akomodasyon">Alojamiento</span>
+    <p class="detail-main" data-es="Hotel" data-ceb="Hotel">Hotel</p>
+    <p class="detail-sub" data-es="Bloque reservado · Código: CLARIES&ALEX" data-ceb="Gireserbahan nga bloke · Kodigo: CLARIES&ALEX">Bloque reservado · Código: CLARIES&ALEX</p>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section timeline-section reveal">
+  <span class="section-label" data-es="El programa" data-ceb="Ang programa">El programa</span>
+  <h2 class="section-title" data-es="Agenda del día" data-ceb="Iskedyul sa Adlaw">Agenda del día</h2>
+
+  <div style="margin-top: 32px;">
+    <div class="timeline-item">
+      <span class="timeline-time">12:00</span>
+      <div class="timeline-dot-col"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+      <div>
+        <p class="timeline-text" data-es="Ceremonia nupcial" data-ceb="Seremonya sa Kasal">Ceremonia nupcial</p>
+        <p class="timeline-desc" data-es="Iglesia de Santa María" data-ceb="Simbahan ni Santa María">Iglesia de Santa María</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-time">13:30</span>
+      <div class="timeline-dot-col"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+      <div>
+        <p class="timeline-text" data-es="Cóctel de bienvenida" data-ceb="Welcome Cocktail">Cóctel de bienvenida</p>
+        <p class="timeline-desc" data-es="Jardines de la Masía" data-ceb="Tanaman sa Masía">Jardines de la Masía</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-time">15:00</span>
+      <div class="timeline-dot-col"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+      <div>
+        <p class="timeline-text" data-es="Banquete nupcial" data-ceb="Kombira sa Kasal">Banquete nupcial</p>
+        <p class="timeline-desc" data-es="Salón principal" data-ceb="Dakong salas">Salón principal</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-time">19:00</span>
+      <div class="timeline-dot-col"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+      <div>
+        <p class="timeline-text" data-es="Baile de los novios" data-ceb="Sayaw sa mga Kasal">Baile de los novios</p>
+        <p class="timeline-desc" data-es="Primer vals" data-ceb="Unang vals">Primer vals</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <span class="timeline-time">20:00</span>
+      <div class="timeline-dot-col"><div class="timeline-dot"></div></div>
+      <div>
+        <p class="timeline-text" data-es="Fiesta hasta el alba" data-ceb="Kasaulogan hangtod sa kabuntagon">Fiesta hasta el alba</p>
+        <p class="timeline-desc" data-es="Música y baile" data-ceb="Musika ug sayaw">Música y baile</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DRESSCODE -->
+<section class="section dresscode-section reveal">
+  <span class="section-label" data-es="Vestimenta" data-ceb="Sinina">Vestimenta</span>
+  <h2 class="section-title" data-es="Código de vestimenta" data-ceb="Dress Code">Código de vestimenta</h2>
+  <p class="section-body" data-es="Formal elegante. Os pedimos que os sumeis a nuestra paleta de colores para crear una fotografía perfecta." data-ceb="Pormal ug elegante. Gisugo namo kamo sa paggamit sa among mga kolor aron makahimo og maayong litrato.">Formal elegante. Os pedimos que os sumeis a nuestra paleta de colores para crear una fotografía perfecta.</p>
+
+  <div class="palette-row">
+    <div class="swatch" style="background: #E8D5C4;"></div>
+    <div class="swatch" style="background: #B8943F;"></div>
+    <div class="swatch" style="background: #8A9B7A;"></div>
+    <div class="swatch" style="background: #C4B5A5;"></div>
+    <div class="swatch" style="background: #2C2416;"></div>
+  </div>
+
+  <p class="dresscode-note" data-es="Crema · Dorado · Salvia · Nude · Oscuro" data-ceb="Krema · Bulawan · Salvia · Nude · Itom">Crema · Dorado · Salvia · Nude · Oscuro</p>
+
+  <p style="font-size:16px; font-style:italic; color:var(--text-light); margin-top:20px;" data-es="Por favor, evitar el blanco y el negro puro." data-ceb="Palihog likayi ang puro puti ug puro itom.">Por favor, evitar el blanco y el negro puro.</p>
+</section>
+
+<!-- RSVP -->
+<section class="section rsvp-section reveal">
+  <span class="section-label" data-es="Confirmación" data-ceb="Konfirmasyon">Confirmación</span>
+  <h2 class="section-title" data-es="¿Vendrás?" data-ceb="Moanha ka ba?">¿Vendrás?</h2>
+  <p class="section-body" data-es="Nada nos haría más felices que compartir este día contigo. Confirma tu asistencia antes del 1 de octubre." data-ceb="Walay makapalipay kanamo kaysa imbitahan ka niini. Palihog konfirma ang imong presensya sa wala pa ang Oktubre 1.">Nada nos haría más felices que compartir este día contigo. Confirma tu asistencia antes del 1 de octubre.</p>
+  <p class="rsvp-deadline" data-es="Fecha límite: 1 de Octubre de 2025" data-ceb="Deadline: Oktubre 1, 2025">Fecha límite: 1 de Octubre de 2025</p>
+  <a href="mailto:boda@sofia-marco.com" class="btn-rsvp" data-es="Confirmar asistencia" data-ceb="Konfirma ang Presensya">Confirmar asistencia</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p class="footer-monogram">A & C</p>
+  <p class="footer-date">15 · XI · 2026</p>
+</footer>
+
+<script>
+  let currentLang = 'es';
+
+  function setLang(lang) {
+    currentLang = lang;
+
+    document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+    document.getElementById('btn-ceb').classList.toggle('active', lang === 'ceb');
+
+    document.querySelectorAll('[data-es]').forEach(el => {
+      const text = el.getAttribute('data-' + lang);
+      if (text) el.textContent = text;
+    });
+
+    document.documentElement.lang = lang === 'es' ? 'es' : 'ceb';
+  }
+
+  // COUNTDOWN
+  function updateCountdown() {
+    const target = new Date('2025-11-15T12:00:00');
+    const now = new Date();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hours').textContent = '0';
+      document.getElementById('cd-mins').textContent = '0';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    document.getElementById('cd-days').textContent = days;
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 30000);
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
